@@ -1,6 +1,6 @@
-<div class="energy-graph">
-    <h3>Energy Data - </h3>
-    <!-- Include chart component or library like Chart.js here -->
-    <canvas id="energyChart"></canvas>
-  </div>
-  
+<canvas baseChart 
+        [data]="chartData" 
+        [options]="chartOptions" 
+        [type]="chartType" 
+        style="width: 300px; height: 330px;">
+</canvas>

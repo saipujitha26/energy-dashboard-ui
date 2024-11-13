@@ -9,6 +9,8 @@ import { TopnavComponent } from './topnav/topnav.component';
 import { MonthlyOverviewComponent } from './monthly-overview/monthly-overview.component';
 import { EnergyGraphComponent } from './energy-graph/energy-graph.component';
 import { FormsModule } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    NgChartsModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

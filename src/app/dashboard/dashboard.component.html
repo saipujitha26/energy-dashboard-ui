@@ -1,15 +1,18 @@
 <div class="dashboard">
-    <div class="dropdown-section">
-      <select class="dropdown" [(ngModel)]="selectedPeriod">
-        <option>Current Week</option>
-        <option>Current Month</option>
-        <option>Current Year</option>
-      </select>
-    </div>
+  <div class="dropdown-section">
+    <select class="dropdown" [(ngModel)]="selectedPeriod">
+      <option>Current Week</option>
+      <option>Current Month</option>
+      <option>Current Year</option>
+    </select>
+  </div>
+
+  <div class="main-content">
     <div class="graph-section">
       <!-- Replace this with your graph component or chart implementation -->
-      <!-- <app-chart [data]="graphData"></app-chart> -->
+      <app-energy-graph></app-energy-graph>
     </div>
+
     <div class="daily-usage">
       <div class="usage-item">
         <h4>Energy Generation</h4>
@@ -29,4 +32,4 @@
       </div>
     </div>
   </div>
-  
+</div>
