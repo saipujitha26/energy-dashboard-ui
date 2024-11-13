@@ -1,4 +1,4 @@
-<div class="dashboard">
+<!-- <div class="dashboard">
   <div class="dropdown-section">
     <select class="dropdown" [(ngModel)]="selectedPeriod">
       <option>Current Week</option>
@@ -9,7 +9,7 @@
 
   <div class="main-content">
     <div class="graph-section">
-      <!-- Replace this with your graph component or chart implementation -->
+     
       <app-energy-graph></app-energy-graph>
     </div>
 
@@ -32,4 +32,73 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Main Content Area with Dropdown, Chart, and Metrics -->
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+
+  <!-- Dropdown for Period Selection -->
+  <div style="display: flex; justify-content: flex-end; align-items: center;">
+    <label for="periodSelect" style="font-weight: bold; font-size: 0.9rem;">Current Month</label>
+    <select id="periodSelect" [(ngModel)]="selectedPeriod" (change)="onPeriodChange($event)" style="padding: 4px; border-radius: 4px; font-size: 0.9rem;">
+      <option value="month">Current Month</option>
+      <option value="week">Current Week</option>
+      <option value="year">Current Year</option>
+    </select>
+  </div>
+
+  <!-- Main Content with Chart and Metrics Side by Side -->
+  <div style="display: flex; gap: 20px; align-items: flex-start;">
+
+    <!-- Chart Display Area -->
+    <div style="flex: 2; background-color: #f9f9f9; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+      <h3 style="text-align: center; font-size: 1.1rem; margin-bottom: 8px;">Solar Generation & Consumption</h3>
+      <canvas baseChart
+              [data]="chartData"
+              [options]="chartOptions"
+              [type]="chartType"
+              style="width: 100%; height: 300px; max-height: 300px;">
+      </canvas>
+    </div>
+
+    <!-- Energy Metrics Display Area (Right of Graph) -->
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+
+      <!-- Energy Generation Metric Card -->
+      <div style="padding: 12px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h4 style="margin-bottom: 8px; color: #333; font-size: 1rem;">Energy Generation</h4>
+        <p style="font-size: 1.1rem; font-weight: bold; color: #007bff;">9574.40 kWh</p>
+        <div style="font-size: 0.8rem; color: #666;">
+          <p>Daily (kW)</p>
+          <p>Min: 4.4 | Max: 4.6</p>
+        </div>
+      </div>
+
+      <!-- Energy Consumption Metric Card -->
+      <div style="padding: 12px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+        <h4 style="margin-bottom: 8px; color: #333; font-size: 1rem;">Energy Consumption</h4>
+        <p style="font-size: 1.1rem; font-weight: bold; color: #dc3545;">5661.60 kWh</p>
+        <div style="font-size: 0.8rem; color: #666;">
+          <p>Daily (kW)</p>
+          <p>Min: 2.7 | Max: 2.9</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+
