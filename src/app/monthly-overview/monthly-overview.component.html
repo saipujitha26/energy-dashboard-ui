@@ -1,0 +1,15 @@
+<div class="monthly-overview">
+    <h3>Monthly Overview (in kW)</h3>
+    <div class="overview-container">
+      <div 
+        *ngFor="let param of metrics; let i = index"
+        class="overview-box"
+        [ngClass]="{'selected': selectedParam === i}"
+        (click)="selectParam(i)"
+      >
+        <p class="label">{{ param.label }}</p>
+        <p class="value">{{ param.value }} kW</p>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,56 @@
+.dashboard {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .dropdown-section {
+    align-self: flex-end;
+  }
+  
+  .dropdown {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .graph-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .daily-usage {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .usage-item {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+  }
+  
+  .usage-item h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .usage-item p {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .min-max {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+  }
+  
