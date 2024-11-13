@@ -1,63 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
-import { EnergyDataService } from '../energy-data.service';
+import { ChartDataResponse, EnergyDataService, EnergyMetrics } from '../energy-data.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent {
-  // selectedPeriod : string= 'currentMonth';
+export class DashboardComponent implements OnInit {
 
-  // energyData = [
-  //   { date: '2024-11-01', energyConsumption: 15, energyGeneration: 10 },
-  //   { date: '2024-11-02', energyConsumption: 20, energyGeneration: 15 },
-  //   { date: '2024-11-03', energyConsumption: 25, energyGeneration: 20 },
- 
-  // ];
-
-  // onPeriodChange(event: any) {
-  //   this.selectedPeriod = event.target.value;
-  // }
-
-  userName: string = 'Naresh Kamble';
+  userName: string = 'Sai Pujitha';
   selectedPeriod: string = 'month'; // Default to 'month'
   monthlyOverview: number = 139.5;
-
   message: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
-
-  ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.message = data['message'] ? `${data['message']} clicked` : null;
-    });
-  }
-  onDashboardClick(){
-    this.router.navigateByUrl('/dashboard');
-  }
-
-  onProfileSettingsClick() {
-    
-    this.router.navigateByUrl('/profile-settings');
-    // You could also use routing if you want to display another page
-  }
-
-  onLogoutClick() {
-  
-    this.router.navigateByUrl('/logout')
-    // You could redirect the user to a login page or clear session here
-  }
-
-
-  // Mock data for energy metrics
-  energyMetrics = {
-    generation: 9574.4,
-    consumption: 5661.6,
-    minUsage: 2.7,
-    maxUsage: 4.6
-  };
+  // Energy Metrics
+  energyGenerationMetrics: EnergyMetrics | null = null;
+  energyConsumptionMetrics: EnergyMetrics | null = null;
 
   chartType: ChartType = 'line';
   chartOptions: ChartOptions = {
@@ -69,7 +28,6 @@ export class DashboardComponent {
     }
   };
 
-  // Initial chart data for the current month
   chartData: ChartData<'line'> = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
@@ -78,47 +36,76 @@ export class DashboardComponent {
     ]
   };
 
-  // Handle dropdown change
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private energyDataService: EnergyDataService // Injecting the service
+  ) {}
+
+  ngOnInit() {
+    // Fetch energy metrics data from the service
+    this.energyDataService.getEnergyConsumptionMetrics().subscribe(
+      (data: EnergyMetrics) => {
+        this.energyConsumptionMetrics = data; // Assign the fetched data
+        console.log('Energy Consumption Metrics:', this.energyConsumptionMetrics); // For debugging
+      },
+      (error) => {
+        console.error('Error fetching energy metrics:', error);
+      }
+    );
+
+
+    this.energyDataService.getEnergyGenerationMetrics().subscribe(
+      (data: EnergyMetrics) => {
+        this.energyGenerationMetrics = data; // Assign the fetched data
+        console.log('Energy Generation Metrics:', this.energyGenerationMetrics); // For debugging
+      },
+      (error) => {
+        console.error('Error fetching energy metrics:', error);
+      }
+    );
+
+    this.route.data.subscribe(data => {
+      this.message = data['message'] ? `${data['message']} clicked` : null;
+    });
+  }
+
+  onDashboardClick() {
+    this.router.navigateByUrl('/dashboard');
+  }
+
+  onProfileSettingsClick() {
+    this.router.navigateByUrl('/profile-settings');
+  }
+
+  onLogoutClick() {
+    this.router.navigateByUrl('/logout');
+  }
+
   onPeriodChange(event: any) {
     this.selectedPeriod = event.target.value;
     this.updateChartData();
   }
 
-  // Method to update chart data based on selected period
   updateChartData() {
-    switch (this.selectedPeriod) {
-      case 'month':
-        // Mock data for current month
+    // Fetch data based on selected period (week, month, or year)
+    this.energyDataService.getChartDataForPeriod(this.selectedPeriod).subscribe(
+      (data: ChartDataResponse) => {
+        // Map the API response to the format expected by the Chart.js
         this.chartData = {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [
-            { label: 'Energy Generation', data: [400, 500, 600, 550], borderColor: 'blue', fill: false },
-            { label: 'Energy Consumption', data: [300, 350, 400, 380], borderColor: 'red', fill: false }
-          ]
+          labels: data.labels,
+          datasets: data.datasets.map(dataset => ({
+            label: dataset.label,
+            data: dataset.data,
+            borderColor: dataset.borderColor,
+            fill: false
+          }))
         };
-        break;
-
-      case 'week':
-        // Mock data for current week
-        this.chartData = {
-          labels: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'],
-          datasets: [
-            { label: 'Energy Generation', data: [70, 80, 60, 75, 85, 90, 95], borderColor: 'blue', fill: false },
-            { label: 'Energy Consumption', data: [50, 60, 55, 60, 70, 75, 80], borderColor: 'red', fill: false }
-          ]
-        };
-        break;
-
-      case 'year':
-        // Mock data for current year
-        this.chartData = {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          datasets: [
-            { label: 'Energy Generation', data: [300, 280, 320, 400, 450, 470, 480, 460, 450, 440, 420, 410], borderColor: 'blue', fill: false },
-            { label: 'Energy Consumption', data: [200, 210, 230, 280, 300, 320, 330, 310, 305, 290, 280, 270], borderColor: 'red', fill: false }
-          ]
-        };
-        break;
-    }
+        console.log('Chart Data for period', this.selectedPeriod, ':', this.chartData); // For debugging
+      },
+      (error) => {
+        console.error('Error fetching chart data:', error);
+      }
+    );
   }
 }

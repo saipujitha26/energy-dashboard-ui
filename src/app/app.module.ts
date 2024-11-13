@@ -10,6 +10,7 @@ import { MonthlyOverviewComponent } from './monthly-overview/monthly-overview.co
 import { EnergyGraphComponent } from './energy-graph/energy-graph.component';
 import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { NgChartsModule } from 'ng2-charts';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    NgChartsModule
+    NgChartsModule,
+    HttpClientModule
     
   ],
   providers: [],
