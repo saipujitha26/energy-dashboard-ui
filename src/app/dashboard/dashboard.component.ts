@@ -9,7 +9,8 @@ import { ChartDataResponse, EnergyDataService, EnergyMetrics } from '../energy-d
 })
 export class DashboardComponent implements OnInit {
 
-  userName: string = 'Sai Pujitha';
+  userId!: number ;
+  userName: string = '';
   selectedPeriod: string = 'month'; // Default to 'month'
   monthlyOverview: number = 139.5;
   message: string | null = null;
@@ -23,7 +24,7 @@ export class DashboardComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { display: true, title: { display: true, text: 'Weeks' } },
+      x: { display: true, title: { display: true, text: 'Time' } },
       y: { display: true, title: { display: true, text: 'kW' } }
     }
   };
@@ -31,8 +32,8 @@ export class DashboardComponent implements OnInit {
   chartData: ChartData<'line'> = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
-      { label: 'Energy Generation', data: [400, 500, 600, 550], borderColor: 'blue', fill: false },
-      { label: 'Energy Consumption', data: [300, 350, 400, 380], borderColor: 'red', fill: false }
+      { label: 'Energy Generation', data: [400, 500, 600, 550], borderColor: 'blue',  },
+      { label: 'Energy Consumption', data: [300, 350, 400, 380], borderColor: 'red', }
     ]
   };
 
@@ -44,30 +45,43 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // Fetch energy metrics data from the service
-    this.energyDataService.getEnergyConsumptionMetrics().subscribe(
-      (data: EnergyMetrics) => {
-        this.energyConsumptionMetrics = data; // Assign the fetched data
-        console.log('Energy Consumption Metrics:', this.energyConsumptionMetrics); // For debugging
-      },
-      (error) => {
-        console.error('Error fetching energy metrics:', error);
-      }
-    );
+    // this.energyDataService.getEnergyConsumptionMetrics().subscribe(
+    //   (data: EnergyMetrics) => {
+    //     this.energyConsumptionMetrics = data; // Assign the fetched data
+    //     console.log('Energy Consumption Metrics:', this.energyConsumptionMetrics); // For debugging
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching energy metrics:', error);
+    //   }
+    // );
 
 
-    this.energyDataService.getEnergyGenerationMetrics().subscribe(
-      (data: EnergyMetrics) => {
-        this.energyGenerationMetrics = data; // Assign the fetched data
-        console.log('Energy Generation Metrics:', this.energyGenerationMetrics); // For debugging
-      },
-      (error) => {
-        console.error('Error fetching energy metrics:', error);
-      }
-    );
+    // this.energyDataService.getEnergyGenerationMetrics().subscribe(
+    //   (data: EnergyMetrics) => {
+    //     this.energyGenerationMetrics = data; // Assign the fetched data
+    //     console.log('Energy Generation Metrics:', this.energyGenerationMetrics); // For debugging
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching energy metrics:', error);
+    //   }
+    // );
 
-    this.route.data.subscribe(data => {
-      this.message = data['message'] ? `${data['message']} clicked` : null;
-    });
+    const storedUserId = localStorage.getItem('userId');
+
+    // If the value is found, parse it as a number
+    if (storedUserId) {
+      this.userId = Number(storedUserId); // Convert to number
+    } else {
+       // Set to null if not found
+    }
+
+    
+    this.energyDataService.getUserData(this.userId).subscribe((data: any) => {
+      console.log('user data : ', data);
+      this.energyGenerationMetrics = data.energyGeneration;
+      this.energyConsumptionMetrics = data.energyConsumption;
+      this.chartData = data.chartData[0];
+    })
   }
 
   onDashboardClick() {
@@ -88,24 +102,72 @@ export class DashboardComponent implements OnInit {
   }
 
   updateChartData() {
+
+    this.energyDataService.getUserData(this.userId).subscribe((data: any) => 
+
+    {
+      
+    if(this.selectedPeriod == 'week'){
+      this.chartData = {
+        labels: data.chartData[0].labels,
+        datasets: data.chartData[0].datasets.map((dataset: any) => ({
+          label: dataset.label,
+          data: dataset.data,
+          borderColor: dataset.borderColor,
+          fill: false
+        }))
+      };
+    }
+
+    else if(this.selectedPeriod == 'month'){
+      this.chartData = {
+        labels: data.chartData[1].labels,
+        datasets: data.chartData[1].datasets.map((dataset: any) => ({
+          label: dataset.label,
+          data: dataset.data,
+          borderColor: dataset.borderColor,
+          fill: false
+        }))
+      };
+    }
+
+    else if(this.selectedPeriod == 'year'){
+      this.chartData = {
+        labels: data.chartData[2].labels,
+        datasets: data.chartData[2].datasets.map((dataset: any) => ({
+          label: dataset.label,
+          data: dataset.data,
+          borderColor: dataset.borderColor,
+          fill: false
+        }))
+      };
+    }
+
+
+    }
+    
+    )
+
+
+
     // Fetch data based on selected period (week, month, or year)
-    this.energyDataService.getChartDataForPeriod(this.selectedPeriod).subscribe(
-      (data: ChartDataResponse) => {
-        // Map the API response to the format expected by the Chart.js
-        this.chartData = {
-          labels: data.labels,
-          datasets: data.datasets.map(dataset => ({
-            label: dataset.label,
-            data: dataset.data,
-            borderColor: dataset.borderColor,
-            fill: false
-          }))
-        };
-        console.log('Chart Data for period', this.selectedPeriod, ':', this.chartData); // For debugging
-      },
-      (error) => {
-        console.error('Error fetching chart data:', error);
-      }
-    );
+    // this.energyDataService.getChartDataForPeriod(this.selectedPeriod).subscribe(
+    //   (data: ChartDataResponse) => {
+    //     // Map the API response to the format expected by the Chart.js
+    //     this.chartData = {
+    //       labels: data.labels,
+    //       datasets: data.datasets.map(dataset => ({
+    //         label: dataset.label,
+    //         data: dataset.data,
+    //         borderColor: dataset.borderColor,
+    //         fill: false
+    //       }))
+    //     };
+    //     console.log('Chart Data for period', this.selectedPeriod, ':', this.chartData); // For debugging
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching chart data:', error);
+    //   }
+    // );
   }
 }

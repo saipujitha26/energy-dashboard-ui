@@ -8,9 +8,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { TopnavComponent } from './topnav/topnav.component';
 import { MonthlyOverviewComponent } from './monthly-overview/monthly-overview.component';
 import { EnergyGraphComponent } from './energy-graph/energy-graph.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+
 
 
 @NgModule({
@@ -20,12 +23,15 @@ import { HttpClientModule } from '@angular/common/http';
     DashboardComponent,
     TopnavComponent,
     MonthlyOverviewComponent,
-    EnergyGraphComponent
+    EnergyGraphComponent,
+    LoginComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     NgChartsModule,
     HttpClientModule
     

@@ -41,4 +41,9 @@ export class EnergyDataService {
     const url = `${this.chartdataUrl}${period}`;
     return this.http.get<ChartDataResponse>(url);
   }
+
+  getUserData(userId: number): any {
+    const userDataUrl = `http://localhost:8080/api/user/${userId}`;
+    return this.http.get<any>(userDataUrl);
+  }
 }
